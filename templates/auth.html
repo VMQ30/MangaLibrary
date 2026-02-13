@@ -1,0 +1,39 @@
+{% extends 'layout.html'%} {% block title %}MangaQuery{% endblock %} {% block
+main %}
+<div class="auth-container">
+  <div class="slider"></div>
+  <div class="login">
+    <h3>Welcome Back!</h3>
+    <form action="/login" method="POST">
+      <div class="input-auth">
+        <span>Email</span>
+        <input type="text" name="email" id="email" required />
+      </div>
+      <div class="input-auth">
+        <span>Password</span>
+        <input type="password" name="password" id="password" required />
+      </div>
+      <button type="submit" class="sign-in">Sign In</button>
+    </form>
+  </div>
+
+  <div class="register">
+    <h3>Create Your Account</h3>
+    <form action="/register" method="POST">
+      <div class="input-auth">
+        <span>Username</span>
+        <input type="text" name="username" id="username" required />
+      </div>
+      <div class="input-auth">
+        <span>Email</span>
+        <input type="text" name="email" id="email" required />
+      </div>
+      <div class="input-auth">
+        <span>Password</span>
+        <input type="password" name="password" id="password" required />
+      </div>
+      <button type="submit" class="sign-up">Sign Up</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
