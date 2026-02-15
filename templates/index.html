@@ -1,7 +1,12 @@
 {% extends 'layout.html' %} {% block title %}MangaQuery{% endblock%} {% block
-main %}
+styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='/landing_page.css') }}"
+/>
+{% endblock%} {% block main %}
 <div class="hero-section">
-  <h1>Your Ultimate Manga and Manhwa Hub</h1>
+  <h1>Your <span>Ultimate</span> Manga and Manhwa Hub</h1>
   <p>
     Discover, track, and organize your favorite comics. Filter by genre, status,
     ratings, all in one place!

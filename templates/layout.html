@@ -8,6 +8,7 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='/index.css') }}"
     />
+    {% block styles %} {% endblock %}
   </head>
   <body>
     <nav>
@@ -16,16 +17,22 @@
         <span>Query</span>
       </div>
       <div class="nav-buttons-container">
-        <button class="browse">Browse</button>
-        <button class="login" onclick="window.location.href = '/login'">
-          Login
-        </button>
-        <button
-          class="get-started"
-          onclick="window.location.href = '/register'"
-        >
-          Get Started
-        </button>
+        <div class="nav-button-wrapper">
+          <button class="browse">Browse</button>
+        </div>
+        <div class="nav-button-wrapper">
+          <button class="login" onclick="window.location.href = '/login'">
+            Login
+          </button>
+        </div>
+        <div class="nav-button-wrapper">
+          <button
+            class="get-started"
+            onclick="window.location.href = '/register'"
+          >
+            Get Started
+          </button>
+        </div>
       </div>
     </nav>
     <main>{% block main%} {%endblock%}</main>
