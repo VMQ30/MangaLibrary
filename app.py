@@ -5,6 +5,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
+app.secret_key = "073003-manga-key-030323"
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -27,6 +28,9 @@ def db_execute(q, *args):
         if q.strip().upper().startswith("SELECT"):
             return cursor.fetchall()
         return None
+    except Exception as e:
+        print(f"DATABASE ERROR: {e}")
+        return []
     finally:
         conn.close()
 
@@ -82,21 +86,19 @@ def register():
 @app.route("/login", methods=["POST", "GET"])
 def login():
     """Logs in user"""
-
-    session.clear()
-
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
 
         if not email or not password:
-            flash("Email or password is missing", "success")
+            flash("Email or password is missing", "error")
             return redirect("/login")
 
         rows = db_execute("SELECT * FROM users WHERE email = ?", email)
+        print("DEBUG ROWS:", rows, flush=True)
 
-        if len(rows) != 1 or not check_password_hash(password, rows[0]["password"]):
-            flash("Invalid email or password")
+        if len(rows) != 1 or not check_password_hash(rows[0]["password"], password):
+            flash("Invalid email or password", "error")
             return redirect("/login")
 
         session["user_id"] = rows[0]["user_id"]

@@ -1,6 +1,7 @@
 (function () {
   checkTextBox();
   movePanel();
+  toasterFade();
 })();
 
 function checkTextBox() {
@@ -36,5 +37,21 @@ function movePanel() {
     signInPanel.classList.remove("move-left");
     signUpPanel.style.opacity = "1";
     signInPanel.style.opacity = "0";
+  });
+}
+
+function toasterFade() {
+  document.addEventListener("DOMContentLoaded", () => {
+    const alerts = document.querySelectorAll(".alert");
+
+    alerts.forEach((alert) => {
+      setTimeout(() => {
+        alert.classList.add("fade-out");
+
+        setTimeout(() => {
+          alert.remove();
+        }, 1000);
+      }, 5000);
+    });
   });
 }
