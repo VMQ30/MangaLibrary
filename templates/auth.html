@@ -1,17 +1,45 @@
 {% extends 'layout.html'%} {% block title %}MangaQuery{% endblock %} {% block
-main %}
+styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='/auth.css') }}" />
+{% endblock%} {% block main %}
+
 <div class="auth-container">
-  <div class="slider"></div>
+  <div class="slider">
+    <div class="sign-up-panel">
+      <h2>Start Your Journey Now!</h2>
+      <p>
+        If you do not have an account yet, join us and start your journey here
+      </p>
+      <button class="change-sign-up">Sign Up</button>
+    </div>
+    <div class="sign-in-panel">
+      <h2>Welcome User!</h2>
+      <p>Welcome back! If you already have an account, log in to continue</p>
+      <button class="change-sign-in">Sign In</button>
+    </div>
+  </div>
   <div class="login">
     <h3>Welcome Back!</h3>
     <form action="/login" method="POST">
-      <div class="input-auth">
-        <span>Email</span>
-        <input type="text" name="email" id="email" required />
+      <div class="input-auth" data-label="Email">
+        <label for="email-login">Email</label>
+        <input
+          class="textbox"
+          type="text"
+          name="email"
+          id="email-login"
+          required
+        />
       </div>
-      <div class="input-auth">
-        <span>Password</span>
-        <input type="password" name="password" id="password" required />
+      <div class="input-auth" data-label="Password">
+        <label for="password-login">Password</label>
+        <input
+          class="textbox"
+          id="password-login"
+          type="password"
+          name="password"
+          required
+        />
       </div>
       <button type="submit" class="sign-in">Sign In</button>
     </form>
@@ -20,20 +48,40 @@ main %}
   <div class="register">
     <h3>Create Your Account</h3>
     <form action="/register" method="POST">
-      <div class="input-auth">
-        <span>Username</span>
-        <input type="text" name="username" id="username" required />
+      <div class="input-auth" data-label="Username">
+        <label for="username-register">Username</label>
+        <input
+          class="textbox"
+          id="username-register"
+          type="text"
+          name="username"
+          required
+        />
       </div>
-      <div class="input-auth">
-        <span>Email</span>
-        <input type="text" name="email" id="email" required />
+      <div class="input-auth" data-label="Email">
+        <label for="email-register">Email</label>
+        <input
+          class="textbox"
+          id="email-register"
+          type="text"
+          name="email"
+          required
+        />
       </div>
-      <div class="input-auth">
-        <span>Password</span>
-        <input type="password" name="password" id="password" required />
+      <div class="input-auth" data-label="Password">
+        <label for="password-register">Password</label>
+        <input
+          class="textbox"
+          id="password-register"
+          type="password"
+          name="password"
+          required
+        />
       </div>
       <button type="submit" class="sign-up">Sign Up</button>
     </form>
   </div>
 </div>
+{% endblock %} {% block script %}
+<script src="../static/script/auth.js"></script>
 {% endblock %}
