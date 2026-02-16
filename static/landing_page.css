@@ -227,6 +227,9 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  border-top: 2px solid #2b004b;
+  border-bottom: 2px solid #2b004b;
+  padding-bottom: 80px;
 
   h3 {
     color: white;
@@ -235,6 +238,7 @@
     text-transform: uppercase;
     letter-spacing: 2px;
     font-family: "Verdana";
+    margin-top: 40px;
   }
 }
 
