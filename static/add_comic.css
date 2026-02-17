@@ -1,0 +1,171 @@
+.add-comic {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 80px;
+  margin-top: 20px;
+}
+.add-comic form {
+  background-color: #1f00375f;
+  padding: 40px 80px;
+  padding-bottom: 60px;
+  width: 60vw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: white;
+  border-radius: 10px;
+  border: 2px solid #2b004b;
+  box-sizing: border-box;
+  gap: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form h3 {
+  font-family: "Verdana";
+  font-size: 2rem;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  margin: 0;
+}
+
+form p {
+  font-family: "Poppins";
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.add-picture {
+  display: flex;
+  align-items: center;
+  border: 2px #440077;
+  border-style: dashed;
+  padding: 40px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.picture {
+  background-color: #2a004b99;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #440077;
+}
+
+.add-picture-info h4,
+.add-comic label {
+  margin: 0;
+  font-family: "Verdana";
+  font-weight: 300;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.add-comic label {
+  font-size: 1rem;
+  padding: 0;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.add-picture-info p {
+  margin: 0;
+}
+
+.add-picture input,
+.add-comic-details input[type="text"],
+.add-comic-details input[type="number"] {
+  width: 100%;
+  margin: 7px 0;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid #440077;
+  padding: 5px;
+  font-size: 1rem;
+  font-family: "Poppins";
+  color: white;
+  caret-color: white;
+}
+
+textarea {
+  width: 100%;
+  margin: 7px 0;
+  background-color: transparent;
+  border: 2px solid #440077;
+  padding: 5px;
+  font-size: 1rem;
+  font-family: "Poppins";
+  color: white;
+  caret-color: white;
+  height: 30vh;
+}
+
+.add-comic-details {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.add-comic-details div {
+  display: flex;
+  flex-direction: column;
+}
+.add-comic-details .details-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  div {
+    flex: 1;
+  }
+}
+
+.add-comic-details .choices {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  p {
+    margin: 0;
+    width: fit-content;
+  }
+  input {
+    margin: 0;
+    width: fit-content;
+  }
+}
+
+.add-comic-details .more-details {
+  display: flex;
+  flex-direction: row;
+  div {
+    flex: 1;
+  }
+}
+
+.add-comic-details input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  font: inherit;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #440077;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

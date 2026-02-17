@@ -5,105 +5,158 @@ styles %}
   href="{{ url_for('static', filename='/add_comic.css') }}"
 />
 {% endblock%} {% block main %}
-<form class="add-comic">
-  <div class="add-comic-title">
-    <h3>Add New Comic</h3>
-    <p>Add something new for others to see and discover!</p>
-  </div>
-
-  <div class="add-picture">
-    <div class="picture"></div>
-    <div class="add-picture-info">
-      <h4>Cover Image URL</h4>
-      <input type="text" name="image-url" />
-      <p>Paste a URL to an image. A default will be used if left empty.</p>
+<div class="add-comic">
+  <form class="add-comic">
+    <div class="add-comic-title">
+      <h3>Add New Comic</h3>
+      <p>Add something new for others to see and discover!</p>
     </div>
-  </div>
 
-  <div class="add-comic-details">
-    <div class="details-wrapper">
-      <div>
-        <label for="add-title">* Title</label>
+    <div class="add-picture">
+      <div class="picture">
+        <svg
+          width="64px"
+          height="64px"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g
+            id="SVGRepo_tracerCarrier"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></g>
+          <g id="SVGRepo_iconCarrier">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M23 4C23 2.34315 21.6569 1 20 1H4C2.34315 1 1 2.34315 1 4V20C1 21.6569 2.34315 23 4 23H20C21.6569 23 23 21.6569 23 20V4ZM21 4C21 3.44772 20.5523 3 20 3H4C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21H20C20.5523 21 21 20.5523 21 20V4Z"
+              fill="rgba(255, 255, 255, 0.6)"
+            ></path>
+            <path
+              d="M4.80665 17.5211L9.1221 9.60947C9.50112 8.91461 10.4989 8.91461 10.8779 9.60947L14.0465 15.4186L15.1318 13.5194C15.5157 12.8476 16.4843 12.8476 16.8682 13.5194L19.1451 17.5039C19.526 18.1705 19.0446 19 18.2768 19H5.68454C4.92548 19 4.44317 18.1875 4.80665 17.5211Z"
+              fill="rgba(255, 255, 255, 0.6)"
+            ></path>
+            <path
+              d="M18 8C18 9.10457 17.1046 10 16 10C14.8954 10 14 9.10457 14 8C14 6.89543 14.8954 6 16 6C17.1046 6 18 6.89543 18 8Z"
+              fill="rgba(255, 255, 255, 0.6)"
+            ></path>
+          </g>
+        </svg>
+      </div>
+      <div class="add-picture-info">
+        <h4>Cover Image URL</h4>
         <input
           type="text"
-          id="add-title"
-          name="title"
-          placeholder="Comic Title"
+          name="image-url"
+          placeholder="https://example.com/cover-picture"
         />
-      </div>
-
-      <div>
-        <label for="add-author">* Author</label>
-        <input
-          type="text"
-          id="add-author"
-          name="author"
-          placeholder="Author's Name"
-          required
-        />
+        <p>Paste a URL to an image. A default will be used if left empty.</p>
       </div>
     </div>
 
-    <div>
-      <label for="add-description">* Description</label>
-      <textarea
-        id="add-description"
-        name="description"
-        placeholder="Write a brief synopsis..."
-        required
-      />
-    </div>
-
-    <div>
-      <div>
-        <label for="add-type">Type</label>
+    <div class="add-comic-details">
+      <div class="details-wrapper">
         <div>
-          {% for type in comic_type %}
-          <input name="add-type" type="radio" value="{{type}}" />{{type}} {%
-          endfor %}
+          <label for="add-title">* Title</label>
+          <input
+            type="text"
+            id="add-title"
+            name="title"
+            placeholder="Comic Title"
+          />
+        </div>
+
+        <div>
+          <label for="add-author">* Author</label>
+          <input
+            type="text"
+            id="add-author"
+            name="author"
+            placeholder="Author's Name"
+            required
+          />
         </div>
       </div>
 
       <div>
-        <label for="add-type">Status</label>
+        <label for="add-description">* Description</label>
+        <textarea
+          id="add-description"
+          name="description"
+          placeholder="Write a brief synopsis..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="more-details">
         <div>
-          {% for status in comic_status %}
-          <input name="add-status" type="radio" value="{{status}}" />{{status}}
+          <label for="add-type">Type</label>
+          <div>
+            {% for type in comic_type %}
+            <div class="choices">
+              <input
+                name="type"
+                id="add-type"
+                type="radio"
+                value="{{type.type_name}}"
+              />
+              <p>{{type.type_name}}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <label for="add-status">Status</label>
+          <div>
+            {% for status in comic_status %}
+            <div class="choices">
+              <input
+                name="status"
+                id="add-status"
+                type="radio"
+                value="{{status.status_name}}"
+              />
+              <p>{{status.status_name}}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <label for="add-num-chapters">Total Chapters</label>
+          <input
+            type="number"
+            name="num-chapters"
+            id="add-num-chapters"
+            min="0"
+            placeholder="0"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label>Tags</label>
+        <div class="button-group">
+          {% for tag in tags %}
+          <input
+            type="checkbox"
+            name="add-tag"
+            value="{{tag.tags_name}}"
+            id="tag-{{loop.index}}"
+            class="hidden-checkbox"
+          />
+          <label for="tag-{{ loop.index }}" class="custom-button">
+            {{tag.tags_name}}
+          </label>
           {% endfor %}
         </div>
       </div>
-
-      <div>
-        <label for="add-num_chapters">Total Chapters</label>
-        <input
-          type="number"
-          name="num-chapters"
-          id="add-num-chapters"
-          min="0"
-          placeholder="0"
-        />
-      </div>
     </div>
 
-    <div>
-      <label>Tags</label>
-      <div class="button-group">
-        {% for tag in tags %}
-        <input
-          type="checkbox"
-          name="add-tag"
-          value="{{tag}}"
-          id="tag-{{loop.index}}"
-          class="hidden-checkbox"
-        />
-        <label for="btn-{{ loop.index }}" class="custom-button">
-          {{type}}
-        </label>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-
-  <button type="submit">+ Add Comic</button>
-</form>
+    <button type="submit">+ Add Comic</button>
+  </form>
+</div>
 {%endblock%}
