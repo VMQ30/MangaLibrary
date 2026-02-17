@@ -1,0 +1,109 @@
+{% extends 'layout.html' %} {% block title %}MangaQuery{% endblock%} {% block
+styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='/add_comic.css') }}"
+/>
+{% endblock%} {% block main %}
+<form class="add-comic">
+  <div class="add-comic-title">
+    <h3>Add New Comic</h3>
+    <p>Add something new for others to see and discover!</p>
+  </div>
+
+  <div class="add-picture">
+    <div class="picture"></div>
+    <div class="add-picture-info">
+      <h4>Cover Image URL</h4>
+      <input type="text" name="image-url" />
+      <p>Paste a URL to an image. A default will be used if left empty.</p>
+    </div>
+  </div>
+
+  <div class="add-comic-details">
+    <div class="details-wrapper">
+      <div>
+        <label for="add-title">* Title</label>
+        <input
+          type="text"
+          id="add-title"
+          name="title"
+          placeholder="Comic Title"
+        />
+      </div>
+
+      <div>
+        <label for="add-author">* Author</label>
+        <input
+          type="text"
+          id="add-author"
+          name="author"
+          placeholder="Author's Name"
+          required
+        />
+      </div>
+    </div>
+
+    <div>
+      <label for="add-description">* Description</label>
+      <textarea
+        id="add-description"
+        name="description"
+        placeholder="Write a brief synopsis..."
+        required
+      />
+    </div>
+
+    <div>
+      <div>
+        <label for="add-type">Type</label>
+        <div>
+          {% for type in comic_type %}
+          <input name="add-type" type="radio" value="{{type}}" />{{type}} {%
+          endfor %}
+        </div>
+      </div>
+
+      <div>
+        <label for="add-type">Status</label>
+        <div>
+          {% for status in comic_status %}
+          <input name="add-status" type="radio" value="{{status}}" />{{status}}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <label for="add-num_chapters">Total Chapters</label>
+        <input
+          type="number"
+          name="num-chapters"
+          id="add-num-chapters"
+          min="0"
+          placeholder="0"
+        />
+      </div>
+    </div>
+
+    <div>
+      <label>Tags</label>
+      <div class="button-group">
+        {% for tag in tags %}
+        <input
+          type="checkbox"
+          name="add-tag"
+          value="{{tag}}"
+          id="tag-{{loop.index}}"
+          class="hidden-checkbox"
+        />
+        <label for="btn-{{ loop.index }}" class="custom-button">
+          {{type}}
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <button type="submit">+ Add Comic</button>
+</form>
+{%endblock%}

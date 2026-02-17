@@ -28,11 +28,34 @@ def db_execute(q, *args):
         if q.strip().upper().startswith("SELECT"):
             return cursor.fetchall()
         return None
-    except Exception as e:
-        print(f"DATABASE ERROR: {e}")
-        return []
     finally:
         conn.close()
+
+
+comic_type_val = ["Manwha", "Manga", "Manhua"]
+comic_status_val = ["Ongoing", "Completed", "Hiatus"]
+comic_tags_val = [
+    "Action",
+    "Adventure",
+    "Comedy",
+    "Fantasy",
+    "Sci-Fi",
+    "Drama",
+    "Romance",
+    "Horror",
+    "Mystery",
+    "Psychological",
+    "Shonen",
+    "Shojo",
+    "Seinen",
+    "Josei",
+    "Slice of Life",
+    "Isekai",
+    "Historical",
+    "Post-Apocalyptic",
+    "Supernatural",
+    "Villainess",
+]
 
 
 def init_db():
@@ -42,6 +65,16 @@ def init_db():
         conn = get_db_connection()
         with open("schema.sql", "r") as f:
             conn.executescript(f.read())
+
+        for t in comic_type_val:
+            db_execute("INSERT INTO comic_type (type_name) VALUES (?)", t)
+
+        for s in comic_status_val:
+            db_execute("INSERT INTO comic_status (status_name) VALUES (?)", s)
+
+        for tag in comic_tags_val:
+            db_execute("INSERT INTO tags (tags_name) VALUES (?)", tag)
+
         conn.close()
         print("Database initialized!")
 
@@ -102,6 +135,23 @@ def login():
             return redirect("/login")
 
         session["user_id"] = rows[0]["user_id"]
-        return redirect("/")
+        return redirect("/add-comic")
     else:
         return render_template("auth.html")
+
+
+@app.route("/add-comic", methods=["POST", "GET"])
+def add_comic():
+    """Adds Comic to the database"""
+    if request.method == "POST":
+        return
+    else:
+        comic_type = db_execute("SELECT type_name FROM comic_type")
+        comic_status = db_execute("SELECT status_name FROM comic_status")
+        comic_tags = db_execute("SELECT tags_name FROM tags")
+        return render_template(
+            "add_comics.html",
+            tags=comic_tags,
+            comic_type=comic_type,
+            comic_status=comic_status,
+        )

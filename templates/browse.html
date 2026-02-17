@@ -1,0 +1,39 @@
+{% extends 'layout.html' %} {% block title %}MangaQuery{% endblock%} {% block
+styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='/browse.css') }}" />
+{% endblock%} {% block main %}
+<div class="browse">
+  <div class="browse-header">
+    <div class="browse-title">
+      <h3>Discover Comics</h3>
+      <p>Browse through ## titles · Filter by genre, status, and more</p>
+    </div>
+
+    <div class="browse-filters">
+      <form action="/filter" method="GET">
+        <input type="textbox" name="search-title" />
+        <select class="status">
+          <option value="">All Status</option>
+          {% for status in comic_status}
+          <option value="{{status}}">{{status}}</option>
+          {% endfor %}
+        </select>
+        <select class="types">
+          <option value="">All Types</option>
+          {% for type in comic_type %}
+          <option value="{{type}}">{{type}}</option>
+          {% endfor %}
+        </select>
+
+        <select class="order">
+          <option>Highest Rating</option>
+          <option>Title</option>
+          <option>Most Chapters</option>
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <div class="browse-body"></div>
+</div>
+{%endblock%}

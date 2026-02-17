@@ -150,6 +150,8 @@ form button:hover {
   z-index: 100;
   border-radius: 10px 10px 10px 25%;
   transition: 1s ease-in-out;
+  border: 3px solid #9000ff;
+  box-shadow: 0 0 20px #9000ff;
 }
 
 .slider div {
