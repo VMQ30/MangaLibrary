@@ -141,16 +141,18 @@ styles %}
         <label>Tags</label>
         <div class="button-group">
           {% for tag in tags %}
-          <input
-            type="checkbox"
-            name="add-tag"
-            value="{{tag.tags_name}}"
-            id="tag-{{loop.index}}"
-            class="hidden-checkbox"
-          />
-          <label for="tag-{{ loop.index }}" class="custom-button">
-            {{tag.tags_name}}
-          </label>
+          <div class="choices-button">
+            <input
+              type="checkbox"
+              name="add-tag"
+              value="{{tag.tags_name}}"
+              id="tag-{{loop.index}}"
+              class="hidden-checkbox"
+            />
+            <label for="tag-{{ loop.index }}" class="custom-button">
+              {{tag.tags_name}}
+            </label>
+          </div>
           {% endfor %}
         </div>
       </div>
