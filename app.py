@@ -156,11 +156,17 @@ def add_comic():
         status_id = None
         type_id = None
 
-        if not status:
-            flash("Missing Status")
-            return redirect("/add-comic")
-        if not selected_type:
-            flash("Missing Comic Type")
+        if (
+            not title
+            or not description
+            or not num_chapters
+            or not image
+            or not status
+            or not selected_type
+            or not author
+            or not selected_tags
+        ):
+            flash("Missing Details, Please Complete the Needed Input")
             return redirect("/add-comic")
 
         try:
@@ -180,6 +186,7 @@ def add_comic():
         except Exception as e:
             print(f"Unexpected error: {e}")
             flash("An internal error occurred.")
+            return redirect("/add-comic")
 
         try:
             db_execute(
@@ -196,13 +203,20 @@ def add_comic():
                 "INSERT INTO authors (name) VALUES (?) ON CONFLICT(name) DO NOTHING",
                 author,
             )
-        except:
-            print("Error in INserting Values")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            flash("An internal error occurred.")
+            return redirect("/add-comic")
 
         try:
             author_id = db_execute("SELECT * FROM authors WHERE name = ?", author)
-            author_id = author_id[0]["author_id"]
             comic_id = db_execute("SELECT * FROM comics WHERE title = ?", title)
+
+            if not author_id or not comic_id:
+                flash("Author or Comic Not Found")
+                return redirect("/add-comic")
+
+            author_id = author_id[0]["author_id"]
             comic_id = comic_id[0]["comic_id"]
 
             db_execute(
@@ -210,22 +224,32 @@ def add_comic():
                 author_id,
                 comic_id,
             )
-        except:
-            print("Error in joining author and comic")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            flash("An internal error occurred.")
+            return redirect("/add-comic")
 
         try:
             for tag in selected_tags:
                 comic_tags_id = db_execute(
                     "SELECT * FROM tags WHERE tags_name = ?", tag
                 )
+
+                if not comic_tags_id:
+                    flash("Invalid Comic Tag")
+                    return redirect("/add-comic")
+
                 comic_tags_id = comic_tags_id[0]["tags_id"]
                 db_execute(
                     "INSERT INTO comic_tags (comic_id , tags_id) VALUES(? , ?)",
                     comic_id,
                     comic_tags_id,
                 )
-        except:
-            print("Error in adding tags")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            flash("An internal error occurred.")
+            return redirect("/add-comic")
+
         return redirect("/add-comic")
 
     else:
@@ -238,3 +262,13 @@ def add_comic():
             comic_type=comic_type,
             comic_status=comic_status,
         )
+
+
+@app.route("/get_comics")
+def get_comics():
+    try:
+        comic_list = db_execute("GET * FROM comics")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        flash("An internal error occurred.")
+        return redirect("/get_comics")

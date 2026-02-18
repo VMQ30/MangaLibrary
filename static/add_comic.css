@@ -41,6 +41,7 @@ form p {
 
 .add-picture {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   border: 2px #440077;
   border-style: dashed;
