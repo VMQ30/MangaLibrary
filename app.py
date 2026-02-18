@@ -144,7 +144,78 @@ def login():
 def add_comic():
     """Adds Comic to the database"""
     if request.method == "POST":
-        return
+        image = request.form.get("image-url")
+        title = request.form.get("title")
+        author = request.form.get("author")
+        description = request.form.get("description")
+        selected_type = request.form.get("type")
+        status = request.form.get("status")
+        num_chapters = request.form.get("num_chapters")
+        selected_tags = request.form.getlist("add-tag")
+
+        status_id = None
+        type_id = None
+
+        try:
+            status_id = db_execute(
+                "SELECT * FROM comic_status WHERE status_name = ?", status
+            )
+            status_id = status_id[0]["comic_status_id"]
+            type_id = db_execute(
+                "SELECT * FROM comic_type WHERE type_name = ?", selected_type
+            )
+            type_id = type_id[0]["comic_type_id"]
+
+        except:
+            print("Error", status_id, type_id)
+
+        try:
+            db_execute(
+                "INSERT INTO comics (title, comic_description, num_of_chapters , cover_image, comic_type_id, comic_status_id) VALUES(?, ?, ?, ?, ?, ?)",
+                title,
+                description,
+                num_chapters,
+                image,
+                type_id,
+                status_id,
+            )
+
+            db_execute(
+                "INSERT INTO authors (name) VALUES (?) ON CONFLICT(name) DO NOTHING",
+                author,
+            )
+        except:
+            print("Error in INserting Values")
+
+        try:
+            author_id = db_execute("SELECT * FROM authors WHERE name = ?", author)
+            author_id = author_id[0]["author_id"]
+            comic_id = db_execute("SELECT * FROM comics WHERE title = ?", title)
+            comic_id = comic_id[0]["comic_id"]
+
+            db_execute(
+                "INSERT INTO author_works (author_id , comic_id) VALUES(? , ?)",
+                author_id,
+                comic_id,
+            )
+        except:
+            print("Error in joining author and comic")
+
+        try:
+            for tag in selected_tags:
+                comic_tags_id = db_execute(
+                    "SELECT * FROM tags WHERE tags_name = ?", tag
+                )
+                comic_tags_id = comic_tags_id[0]["tags_id"]
+                db_execute(
+                    "INSERT INTO comic_tags (comic_id , tags_id) VALUES(? , ?)",
+                    comic_id,
+                    comic_tags_id,
+                )
+        except:
+            print("Error in adding tags")
+        return redirect("/add-comic")
+
     else:
         comic_type = db_execute("SELECT type_name FROM comic_type")
         comic_status = db_execute("SELECT status_name FROM comic_status")

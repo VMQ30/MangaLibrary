@@ -6,7 +6,7 @@ styles %}
 />
 {% endblock%} {% block main %}
 <div class="add-comic">
-  <form class="add-comic">
+  <form class="add-comic" action="/add-comic" method="POST">
     <div class="add-comic-title">
       <h3>Add New Comic</h3>
       <p>Add something new for others to see and discover!</p>
@@ -129,7 +129,7 @@ styles %}
           <label for="add-num-chapters">Total Chapters</label>
           <input
             type="number"
-            name="num-chapters"
+            name="num_chapters"
             id="add-num-chapters"
             min="0"
             placeholder="0"

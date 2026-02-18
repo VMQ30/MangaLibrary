@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS comic_status(
 
 CREATE TABLE IF NOT EXISTS authors(
     author_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT
+    name TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS comics(
@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS comics(
     ratings FLOAT,
     cover_image TEXT,
     comic_type_id INTEGER,
-    comic_status INTEGER,
+    comic_status_id INTEGER,
     FOREIGN KEY (comic_type_id) REFERENCES comic_type(comic_type_id)
-    FOREIGN KEY(comic_status) REFERENCES comic_status(comic_status_id)
+    FOREIGN KEY(comic_status_id) REFERENCES comic_status(comic_status_id)
 );
 
 
