@@ -12,10 +12,20 @@
   </head>
   <body>
     <nav>
-      <div class="title">
-        <h2>Manga</h2>
-        <span>Query</span>
-      </div>
+      <a href="/">
+        <div class="title">
+          <h2>Manga</h2>
+          <span>Query</span>
+        </div>
+      </a>
+
+      <input type="checkbox" id="menu-toggle" class="menu-checkbox" />
+      <label for="menu-toggle" class="menu-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+
       <div class="nav-buttons-container">
         <div class="nav-button-wrapper">
           <button class="browse">Browse</button>
@@ -166,6 +176,7 @@
           <button
             class="facebook"
             data-social="Facebook"
+            aria-label="'Follow us on Facebook"
             style="--accent-color: #19478a"
           >
             <svg
@@ -210,6 +221,7 @@
           </button>
           <button
             class="instagram"
+            aria-label="'Follow us on Instagram"
             data-social="Instagram"
             style="--accent-color: #dc2b7a"
           >
@@ -247,6 +259,7 @@
           </button>
           <button
             class="discord"
+            aria-label="'Follow us on Discord"
             data-social="Discord"
             style="--accent-color: #5865f1"
           >
@@ -286,6 +299,7 @@
           <button
             class="reddit"
             data-social="Reddit"
+            aria-label="'Follow us on Reddit"
             style="--accent-color: #ff4501"
           >
             <svg
@@ -331,6 +345,7 @@
           <button
             class="twitter"
             data-social="Twitter"
+            aria-label="'Follow us on Twitter"
             style="--accent-color: #01aeef"
           >
             <svg

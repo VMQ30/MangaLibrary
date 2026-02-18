@@ -2,7 +2,6 @@
   font-family: "Poppins";
   src: url("Poppins-Regular.ttf");
 }
-
 body {
   background-color: #000000;
   margin: 0;
@@ -17,9 +16,14 @@ nav {
   position: sticky;
   top: 0;
   background-color: #000000b1;
-  padding: 20px 10px;
+  padding: 20px;
   z-index: 999;
   backdrop-filter: blur(5px);
+  flex-wrap: wrap;
+
+  a {
+    text-decoration: none;
+  }
 }
 
 @property --angle {
@@ -106,7 +110,7 @@ nav {
 
 .title h2,
 .title span {
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 2vw, 2.5rem);
   font-weight: 900;
   font-family: Verdana;
   margin: 0;
@@ -124,6 +128,7 @@ footer {
   padding: 20px 40px;
   border-top: 2px solid #2b004b;
   color: rgba(255, 255, 255, 0.7);
+  flex-wrap: wrap;
 
   h2,
   span {
@@ -155,7 +160,9 @@ footer {
 .footer-info .contact-info {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .contact-info .address div {
@@ -276,4 +283,56 @@ footer button:hover::before {
 footer button:hover::after {
   opacity: 1;
   transform: translateY(-300%) translateX(-50%) rotate(0);
+}
+
+.menu-checkbox,
+.menu-icon {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .title {
+    justify-content: center;
+  }
+  .nav-buttons-container {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    align-items: flex-end;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #000000;
+    padding: 20px 20px;
+    gap: 20px;
+    z-index: 998;
+    box-sizing: border-box;
+  }
+
+  .menu-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  .menu-icon span {
+    width: 30px;
+    height: 3px;
+    background-color: white;
+    transition: 0.3s;
+  }
+
+  .menu-checkbox:checked ~ .nav-buttons-container {
+    display: flex;
+  }
+
+  .nav-button-wrapper {
+    width: 50%;
+    justify-content: center;
+  }
+
+  button {
+    width: 100%;
+  }
 }

@@ -2,12 +2,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 80px;
-  margin-top: 20px;
+  margin-bottom: clamp(40px, 2vw, 80px);
+  margin-top: clamp(10px, 2vw, 20px);
 }
 .add-comic form {
   background-color: #1f00375f;
-  padding: 40px 80px;
+  padding: clamp(20px, 2vw, 40px) clamp(20px, 2vw, 80px);
   padding-bottom: 60px;
   width: 60vw;
   display: flex;
@@ -154,6 +154,7 @@ textarea {
   display: flex;
   flex-direction: row;
   gap: 40px;
+  flex-wrap: wrap;
   div {
     flex: 1;
   }
@@ -279,4 +280,10 @@ input[type="number"] {
 .add-comic button:hover {
   border-color: #6200ae;
   background-color: #1f0037ba;
+}
+
+@media (max-width: 768px) {
+  .add-comic form {
+    width: 90%;
+  }
 }

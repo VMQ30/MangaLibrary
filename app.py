@@ -156,18 +156,30 @@ def add_comic():
         status_id = None
         type_id = None
 
+        if not status:
+            flash("Missing Status")
+            return redirect("/add-comic")
+        if not selected_type:
+            flash("Missing Comic Type")
+            return redirect("/add-comic")
+
         try:
             status_id = db_execute(
                 "SELECT * FROM comic_status WHERE status_name = ?", status
             )
-            status_id = status_id[0]["comic_status_id"]
             type_id = db_execute(
                 "SELECT * FROM comic_type WHERE type_name = ?", selected_type
             )
+
+            if not status_id or not type_id:
+                flash("Invalid Input, Please Try Again")
+                return redirect("/add-comic")
+            status_id = status_id[0]["comic_status_id"]
             type_id = type_id[0]["comic_type_id"]
 
-        except:
-            print("Error", status_id, type_id)
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            flash("An internal error occurred.")
 
         try:
             db_execute(
