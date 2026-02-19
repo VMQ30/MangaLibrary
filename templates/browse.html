@@ -6,13 +6,20 @@ styles %}
   <div class="browse-header">
     <div class="browse-title">
       <h3>Discover Comics</h3>
-      <p>Browse through ## titles · Filter by genre, status, and more</p>
+      <p>
+        Browse through {{ comic_list|length }} titles · Filter by genre, status,
+        and more
+      </p>
     </div>
 
     <div class="browse-filters">
       <form action="/browse" method="POST" id="filter-form">
-        <div>
-          <input type="textbox" name="search-title" />
+        <div class="inputs">
+          <input
+            type="text"
+            name="search-title"
+            placeholder="Search by TItle"
+          />
           <select class="filter-input" name="comic_status">
             <option value="">All Status</option>
             {% for status in comic_status %}

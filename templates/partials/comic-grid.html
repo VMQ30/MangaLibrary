@@ -1,6 +1,9 @@
 {% if comic_list %} {% for item in comic_list %}
 <div class="card-wrapper">
   <div class="card">
+    <div class="background">
+      <img src="{{item.cover_image}}" alt="{{item.title}} cover" />
+    </div>
     <div class="card-info">
       <div class="card-info-upper">
         <div class="comic-type">{{item.type_name}}</div>
@@ -8,7 +11,7 @@
       </div>
       <div class="card-info-lower">
         <h5>{{item.title}}</h5>
-        <div>
+        <div class="card-info-lower-details">
           <div class="ratings">
             <svg
               width="64px"

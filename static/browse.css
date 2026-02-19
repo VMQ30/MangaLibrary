@@ -1,5 +1,40 @@
 .browse {
   color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.browse-header,
+.browse-body {
+  width: 80%;
+}
+
+.browse-title h3 {
+  margin: 0;
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-family: "Verdana";
+}
+
+.browse-title p {
+  font-family: "Poppins";
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.browse input[type="text"] {
+  font-size: 1rem;
+  background-color: transparent;
+  color: white;
+  font-size: 1rem;
+  font-family: "Poppins";
+  border: none;
+  width: 20%;
+  border-bottom: 2px solid #2b004b;
 }
 
 .browse input[type="checkbox"] {
@@ -32,6 +67,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: 5px;
+  margin-top: 10px;
 
   label {
     margin: 0;
@@ -40,6 +76,14 @@
     color: rgba(255, 255, 255, 0.6);
     line-height: 2rem;
   }
+}
+
+.inputs {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 20px;
 }
 
 .button-group label {
@@ -62,4 +106,123 @@
 .button-group input[type="checkbox"]:checked + label {
   color: white;
   z-index: 800;
+}
+
+.filter-input {
+  background-color: transparent;
+  border: #2b004b 2px solid;
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.6);
+  height: 100%;
+  font-size: 1rem;
+  padding: 2px;
+  width: 15%;
+}
+
+.browse-body {
+  width: 80%;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  aspect-ratio: 6/9;
+  background-color: #1f00375f;
+  border: 2px solid #2b004b;
+  border-radius: 5px;
+  position: relative;
+  padding: 15px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.card:hover {
+  transform: scale(1.05);
+  border-color: white;
+}
+
+.background {
+  z-index: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  color: white;
+  img {
+    object-fit: cover;
+  }
+}
+
+.card-info {
+  display: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.card-info-upper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 5px;
+
+  div {
+    font-size: 0.7rem;
+    font-family: "Verdana";
+    border-radius: 20px;
+    border: 2px solid #440077;
+    color: white;
+    padding: 5px 10px;
+  }
+}
+.card-info-lower {
+  font-family: "Poppins";
+  font-size: 1rem;
+  h5 {
+    margin: 0;
+    font-family: "Verdana";
+    font-size: 1.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+  div {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.card-info-lower-details {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+.ratings {
+  display: flex;
+  align-items: center;
+  svg {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .inputs {
+    input,
+    select {
+      width: 100% !important;
+    }
+  }
 }
