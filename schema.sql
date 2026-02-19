@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS comics(
     title TEXT NOT NULL,
     comic_description TEXT NOT NULL,
     num_of_chapters INTEGER NOT NULL DEFAULT 1,
-    ratings FLOAT,
+    ratings FLOAT DEFAULT 0,
     cover_image TEXT,
     comic_type_id INTEGER,
     comic_status_id INTEGER,

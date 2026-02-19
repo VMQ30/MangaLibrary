@@ -238,6 +238,8 @@ textarea {
 
 .add-comic-details label {
   transition: 0.3s ease;
+  font-size: 1rem;
+  font-family: "Poppins";
 }
 
 .add-comic-details input[type="checkbox"]:hover {

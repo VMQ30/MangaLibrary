@@ -10,30 +10,55 @@ styles %}
     </div>
 
     <div class="browse-filters">
-      <form action="/filter" method="GET">
-        <input type="textbox" name="search-title" />
-        <select class="status">
-          <option value="">All Status</option>
-          {% for status in comic_status}
-          <option value="{{status}}">{{status}}</option>
-          {% endfor %}
-        </select>
-        <select class="types">
-          <option value="">All Types</option>
-          {% for type in comic_type %}
-          <option value="{{type}}">{{type}}</option>
-          {% endfor %}
-        </select>
+      <form action="/browse" method="POST" id="filter-form">
+        <div>
+          <input type="textbox" name="search-title" />
+          <select class="filter-input" name="comic_status">
+            <option value="">All Status</option>
+            {% for status in comic_status %}
+            <option value="{{status.status_name}}">
+              {{status.status_name}}
+            </option>
+            {% endfor %}
+          </select>
+          <select class="filter-input" name="comic_type">
+            <option value="">All Types</option>
+            {% for type in comic_type %}
+            <option value="{{type.type_name}}">{{type.type_name}}</option>
+            {% endfor %}
+          </select>
 
-        <select class="order">
-          <option>Highest Rating</option>
-          <option>Title</option>
-          <option>Most Chapters</option>
-        </select>
+          <select class="filter-input" name="comic_order">
+            <option value="highest-rating">Highest Rating</option>
+            <option value="asc-title">Title</option>
+            <option value="most-chapters">Most Chapters</option>
+          </select>
+        </div>
+
+        <div class="button-group">
+          {% for tag in comic_tags %}
+          <div class="choices-button">
+            <input
+              type="checkbox"
+              name="add-tag"
+              id="tag-{{loop.index}}"
+              value="{{tag.tags_name}}"
+              class="hidden-checkbox"
+            />
+            <label for="tag-{{ loop.index }}" class="custom-button">
+              {{tag.tags_name}}
+            </label>
+          </div>
+          {% endfor %}
+        </div>
       </form>
     </div>
   </div>
 
-  <div class="browse-body"></div>
+  <div class="browse-body" id="comic-container">
+    {% include 'partials/comic-grid.html' %}
+  </div>
 </div>
-{%endblock%}
+{%endblock%} {% block script %}
+<script src="{{ url_for('static', filename='script/browse.js') }}"></script>
+{% endblock %}

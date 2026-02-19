@@ -135,7 +135,7 @@ def login():
             return redirect("/login")
 
         session["user_id"] = rows[0]["user_id"]
-        return redirect("/add-comic")
+        return redirect("/browse")
     else:
         return render_template("auth.html")
 
@@ -264,11 +264,61 @@ def add_comic():
         )
 
 
-@app.route("/get_comics")
-def get_comics():
+@app.route("/browse", methods=["GET", "POST"])
+def browse():
+    """Brose comics"""
+    q = "SELECT * FROM comics INNER JOIN comic_status USING (comic_status_id) INNER JOIN comic_type USING (comic_type_id) WHERE 1 + 1 "
+    params = []
+    if request.method == "POST":
+        status_filter = request.form.get("comic_status")
+        type_filter = request.form.get("comic_type")
+        title_filter = request.form.get("search-title")
+        tags_filter = request.form.getlist("add-tag")
+        comic_order = request.form.get("comic_order")
+
+        if status_filter:
+            q += " AND status_name = ?"
+            params.append(status_filter)
+        if type_filter:
+            q += " AND type_name = ?"
+            params.append(type_filter)
+        if title_filter:
+            q += " AND title LIKE ?"
+            params.append(title_filter)
+        if tags_filter:
+            placeholder = ", ".join(["?"] * len(tags_filter))
+            q += f" AND comic_id IN (SELECT comic_id FROM comic_tags JOIN tags USING (tags_id) WHERE tags_name IN ({placeholder}))"
+            params.extend(tags_filter)
+        if comic_order == "highest-rating":
+            q += " ORDER BY ratings DESC"
+        elif comic_order == "asc-title":
+            q += " ORDER BY title ASC"
+        elif comic_order == "most-chapters":
+            q += " ORDER BY num_of_chapters DESC"
+
     try:
-        comic_list = db_execute("GET * FROM comics")
+        comic_list = db_execute(q, *params)
+        comic_status = db_execute("SELECT * FROM comic_status")
+        comic_type = db_execute("SELECT * FROM comic_type")
+        comic_tags = db_execute("SELECT * FROM tags")
+
     except Exception as e:
         print(f"Unexpected error: {e}")
         flash("An internal error occurred.")
-        return redirect("/get_comics")
+        return redirect("/browse")
+
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return render_template("partials/comic-grid.html", comic_list=comic_list)
+
+    return render_template(
+        "browse.html",
+        comic_list=comic_list,
+        comic_status=comic_status,
+        comic_type=comic_type,
+        comic_tags=comic_tags,
+    )
+
+
+# comic_list = db_execute(
+#             "SELECT * FROM comics INNER JOIN author_works USING (comic_id) INNER JOIN comic_tags USING (comic_id) INNER JOIN authors USING (author_id) INNER JOIN tags USING (tags_id) INNER JOIN comic_status USING (comic_status_id) INNER JOIN comic_type USING (comic_type_id)"
+#         )
