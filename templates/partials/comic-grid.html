@@ -1,6 +1,9 @@
 {% if comic_list %} {% for item in comic_list %}
 <div class="card-wrapper">
-  <div class="card">
+  <div
+    class="card"
+    onclick='window.location.href = "/comic_details/{{item.comic_id }}"'
+  >
     <div class="background">
       <img src="{{item.cover_image}}" alt="{{item.title}} cover" />
     </div>

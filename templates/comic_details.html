@@ -1,0 +1,68 @@
+{% extends 'layout.html' %} {% block title %}MangaQuery{% endblock%} {% block
+styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='/comic_details.css') }}"
+/>
+{% endblock%} {% block main %}
+<div class="comic-details">
+  <div class="header">
+    <a href="/browse"><span>←</span> Back to browse</a>
+  </div>
+
+  <div class="comic-details-container">
+    <div class="comic-photo">
+      <img src="{{details.cover_image}}" alt="{{details.title}} photo cover" />
+    </div>
+
+    <div class="comic-info">
+      <div class="comic-info-header">
+        <div class="info-header-upper">
+          <div class="type">{{details[0].type_name}}</div>
+          <div class="status">{{details[0].status_name}}</div>
+        </div>
+
+        <div class="info-header-title">
+          <h3>{{details[0].title}}</h3>
+        </div>
+      </div>
+
+      <div class="comic-info-main">
+        <div class="more-details">
+          <div>
+            <p>Author: {{details[0].name}}</p>
+            <p>Ratings: {{details[0].ratings}}</p>
+          </div>
+        </div>
+        <p>{{details[0].description}}</p>
+        <div class="tags-wrapper">
+          {%for tag in details%}
+          <div class="tags">{{tag.tags_name}}</div>
+          {%endfor%}
+        </div>
+      </div>
+
+      <div class="reading-list-info">
+        {% if details[0].reading_list_id %}
+        <div>
+          <select>
+            {% for s in status %}
+            <option value="{{s.reading_status_name}}">
+              {{s.reading_status_name}}
+            </option>
+            {% endfor %}
+          </select>
+
+          <button class="remove" name="remove">Remove</button>
+        </div>
+        {% else %}
+        <button class="add-reading-list" name="add-reading-list">
+          + Add to Reading List
+        </button>
+
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{%endblock%}

@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from functools import wraps
 from flask import Flask, redirect, render_template, request, session, flash
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -10,6 +11,18 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+
+def login_required(f):
+    """Decorate routes to require login."""
+
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
 def get_db_connection():
@@ -32,6 +45,7 @@ def db_execute(q, *args):
         conn.close()
 
 
+comic_reading_status_val = ["Reading", "Completed", "Plan to Read"]
 comic_type_val = ["Manwha", "Manga", "Manhua"]
 comic_status_val = ["Ongoing", "Completed", "Hiatus"]
 comic_tags_val = [
@@ -65,6 +79,9 @@ def init_db():
         conn = get_db_connection()
         with open("schema.sql", "r") as f:
             conn.executescript(f.read())
+
+        for r in comic_reading_status_val:
+            db_execute("INSERT INTO reading_status (reading_status_name) VALUES(?)", r)
 
         for t in comic_type_val:
             db_execute("INSERT INTO comic_type (type_name) VALUES (?)", t)
@@ -136,11 +153,11 @@ def login():
 
         session["user_id"] = rows[0]["user_id"]
         return redirect("/browse")
-    else:
-        return render_template("auth.html")
+    return render_template("auth.html")
 
 
 @app.route("/add-comic", methods=["POST", "GET"])
+@login_required
 def add_comic():
     """Adds Comic to the database"""
     if request.method == "POST":
@@ -265,6 +282,7 @@ def add_comic():
 
 
 @app.route("/browse", methods=["GET", "POST"])
+@login_required
 def browse():
     """Brose comics"""
     q = "SELECT * FROM comics INNER JOIN comic_status USING (comic_status_id) INNER JOIN comic_type USING (comic_type_id) WHERE 1 + 1 "
@@ -319,6 +337,28 @@ def browse():
     )
 
 
-# comic_list = db_execute(
-#             "SELECT * FROM comics INNER JOIN author_works USING (comic_id) INNER JOIN comic_tags USING (comic_id) INNER JOIN authors USING (author_id) INNER JOIN tags USING (tags_id) INNER JOIN comic_status USING (comic_status_id) INNER JOIN comic_type USING (comic_type_id)"
-#         )
+@app.route("/comic_details/<int:comic_id>")
+def comic_details(comic_id):
+    """Get comic details"""
+    user_id = session["user_id"]
+    specific_comic_details = db_execute(
+        """
+        SELECT * 
+        FROM comics
+        INNER JOIN author_works USING (comic_id) 
+        INNER JOIN comic_tags USING (comic_id) 
+        INNER JOIN authors USING (author_id) 
+        INNER JOIN tags USING (tags_id) 
+        INNER JOIN comic_status USING (comic_status_id) 
+        INNER JOIN comic_type USING (comic_type_id) 
+        LEFT JOIN reading_list ON comics.comic_id = reading_list.comic_id AND user_id = ?
+        WHERE comics.comic_id = ? """,
+        comic_id,
+        user_id,
+    )
+
+    reading_status = db_execute("SELECT * FROM reading_status")
+
+    return render_template(
+        "comic_details.html", details=specific_comic_details, status=reading_status
+    )
