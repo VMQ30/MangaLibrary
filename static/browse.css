@@ -136,6 +136,7 @@
   padding: 15px;
   cursor: pointer;
   transition: 0.3s ease;
+  font-family: "Poppins";
   p {
     margin: 0;
     color: rgba(255, 255, 255, 0.6);

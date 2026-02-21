@@ -29,10 +29,8 @@ styles %}
 
       <div class="comic-info-main">
         <div class="more-details">
-          <div>
-            <p>Author: {{details[0].name}}</p>
-            <p>Ratings: {{details[0].ratings}}</p>
-          </div>
+          <p>Author: {{details[0].name}}</p>
+          <p>Ratings: {{details[0].ratings}}</p>
         </div>
         <p>{{details[0].description}}</p>
         <div class="tags-wrapper">
@@ -45,24 +43,40 @@ styles %}
       <div class="reading-list-info">
         {% if details[0].reading_list_id %}
         <div>
-          <select>
+          <select
+            name="change-status"
+            onchange="updateStatus(this.value, '{{ details[0].comic_id }}')"
+          >
             {% for s in status %}
-            <option value="{{s.reading_status_name}}">
+            <option value="{{s.reading_status_id}}">
               {{s.reading_status_name}}
             </option>
             {% endfor %}
           </select>
 
-          <button class="remove" name="remove">Remove</button>
+          <form
+            action="/remove_reading_list/{{details[0].comic_id}}"
+            method="POST"
+          >
+            <button class="remove" name="remove">Remove</button>
+          </form>
         </div>
         {% else %}
-        <button class="add-reading-list" name="add-reading-list">
-          + Add to Reading List
-        </button>
+        <form action="/add_reading_list/{{details[0].comic_id}}" method="POST">
+          <button
+            type="submit"
+            class="add-reading-list"
+            name="add-reading-list"
+          >
+            + Add to Reading List
+          </button>
+        </form>
 
         {% endif %}
       </div>
     </div>
   </div>
 </div>
-{%endblock%}
+{%endblock%}{% block script %}
+<script src="{{ url_for('static', filename='script/comic_details.js') }}"></script>
+{% endblock %}

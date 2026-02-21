@@ -351,7 +351,7 @@ def comic_details(comic_id):
         INNER JOIN tags USING (tags_id) 
         INNER JOIN comic_status USING (comic_status_id) 
         INNER JOIN comic_type USING (comic_type_id) 
-        LEFT JOIN reading_list ON comics.comic_id = reading_list.comic_id AND user_id = ?
+        LEFT JOIN reading_list ON comics.comic_id = reading_list.comic_id AND reading_list.user_id = ?
         WHERE comics.comic_id = ? """,
         comic_id,
         user_id,
@@ -362,3 +362,49 @@ def comic_details(comic_id):
     return render_template(
         "comic_details.html", details=specific_comic_details, status=reading_status
     )
+
+
+@app.route("/add_reading_list/<int:comic_id>", methods=["POST", "GET"])
+def add_reading_list(comic_id):
+    """Add comic to reading list"""
+    if request.method == "POST":
+        user_id = session["user_id"]
+        db_execute(
+            "INSERT OR IGNORE INTO reading_list (comic_id , user_id, reading_status_id) VALUES(?,?,?)",
+            comic_id,
+            user_id,
+            1,
+        )
+    return redirect(f"/comic_details/{comic_id}")
+
+
+@app.route("/change_reading_status/<int:comic_id>", methods=["POST", "GET"])
+def change_reading_status(comic_id):
+    """Change reading status"""
+    if request.method == "POST":
+        user_id = session["user_id"]
+        status_id = request.form.get("reading_status_id")
+        try:
+            db_execute(
+                "UPDATE reading_list SET reading_status_id = ? WHERE comic_id = ? AND user_id = ?",
+                status_id,
+                comic_id,
+                user_id,
+            )
+        except:
+            print(f"Unexpected error: {e}")
+            flash("An internal error occurred.")
+    return redirect(f"/comic_details/{comic_id}")
+
+
+@app.route("/remove_reading_list/<int:comic_id>", methods=["POST", "GET"])
+def remove_reading_list(comic_id):
+    """Remove comic from reading list"""
+    if request.method == "POST":
+        user_id = session["user_id"]
+        db_execute(
+            "DELETE FROM reading_list WHERE comic_id = ? AND user_id = ?",
+            comic_id,
+            user_id,
+        )
+    return redirect(f"/comic_details/{comic_id}")
