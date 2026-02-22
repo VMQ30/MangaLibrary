@@ -30,7 +30,7 @@ styles %}
       <div class="comic-info-main">
         <div class="more-details">
           <p>Author: {{details[0].name}}</p>
-          <p>Ratings: {{details[0].ratings}}</p>
+          <p>Ratings: {{details[0].avg_rating}}</p>
         </div>
         <p>{{details[0].description}}</p>
         <div class="tags-wrapper">
@@ -47,11 +47,16 @@ styles %}
             name="change-status"
             onchange="updateStatus(this.value, '{{ details[0].comic_id }}')"
           >
-            {% for s in status %}
+            {% for s in status %} {% if s.reading_status_id
+            ==details[0].reading_status_id%}
+            <option value="{{s.reading_status_id}}" selected>
+              {{s.reading_status_name}}
+            </option>
+            {% else %}
             <option value="{{s.reading_status_id}}">
               {{s.reading_status_name}}
             </option>
-            {% endfor %}
+            {% endif %} {% endfor %}
           </select>
 
           <form
@@ -61,6 +66,27 @@ styles %}
             <button class="remove" name="remove">Remove</button>
           </form>
         </div>
+        <form
+          class="ratings"
+          method="POST"
+          action="/add-rating/{{details[0].comic_id}}"
+        >
+          <button type="submit" name="rating" value="5" class="ratings-button">
+            ★
+          </button>
+          <button type="submit" name="rating" value="4" class="ratings-button">
+            ★
+          </button>
+          <button type="submit" name="rating" value="3" class="ratings-button">
+            ★
+          </button>
+          <button type="submit" name="rating" value="2" class="ratings-button">
+            ★
+          </button>
+          <button type="submit" name="rating" value="1" class="ratings-button">
+            ★
+          </button>
+        </form>
         {% else %}
         <form action="/add_reading_list/{{details[0].comic_id}}" method="POST">
           <button

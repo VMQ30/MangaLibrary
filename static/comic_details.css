@@ -127,3 +127,25 @@
   background-color: #2b004b;
   color: white;
 }
+
+.ratings-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: white;
+  transition: color 0.2s;
+  padding: 0 2px;
+}
+
+.ratings-button.active,
+.ratings-button:hover,
+.ratings-button:hover ~ .ratings-button {
+  color: #9000ff;
+}
+
+.ratings {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}

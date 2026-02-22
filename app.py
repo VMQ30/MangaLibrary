@@ -119,7 +119,7 @@ def register():
 
         try:
             db_execute(
-                "INSERT INTO users (email , password, username) VALUES(? , ? , ?)",
+                "INSERT OR IGNORE INTO users (email , password, username) VALUES(? , ? , ?)",
                 email,
                 password,
                 username,
@@ -207,7 +207,7 @@ def add_comic():
 
         try:
             db_execute(
-                "INSERT INTO comics (title, comic_description, num_of_chapters , cover_image, comic_type_id, comic_status_id) VALUES(?, ?, ?, ?, ?, ?)",
+                "INSERT OR IGNORE INTO comics (title, comic_description, num_of_chapters , cover_image, comic_type_id, comic_status_id) VALUES(?, ?, ?, ?, ?, ?)",
                 title,
                 description,
                 num_chapters,
@@ -217,7 +217,7 @@ def add_comic():
             )
 
             db_execute(
-                "INSERT INTO authors (name) VALUES (?) ON CONFLICT(name) DO NOTHING",
+                "INSERT OR IGNORE INTO authors (name) VALUES (?)",
                 author,
             )
         except Exception as e:
@@ -237,7 +237,7 @@ def add_comic():
             comic_id = comic_id[0]["comic_id"]
 
             db_execute(
-                "INSERT INTO author_works (author_id , comic_id) VALUES(? , ?)",
+                "INSERT OR IGNORE INTO author_works (author_id , comic_id) VALUES(? , ?)",
                 author_id,
                 comic_id,
             )
@@ -258,7 +258,7 @@ def add_comic():
 
                 comic_tags_id = comic_tags_id[0]["tags_id"]
                 db_execute(
-                    "INSERT INTO comic_tags (comic_id , tags_id) VALUES(? , ?)",
+                    "INSERT OR IGNORE INTO comic_tags (comic_id , tags_id) VALUES(? , ?)",
                     comic_id,
                     comic_tags_id,
                 )
@@ -343,7 +343,9 @@ def comic_details(comic_id):
     user_id = session["user_id"]
     specific_comic_details = db_execute(
         """
-        SELECT * 
+        SELECT 
+            *,
+            (SELECT ROUND(AVG(rating) , 2) FROM reading_list WHERE comics.comic_id = reading_list.comic_id) AS avg_rating
         FROM comics
         INNER JOIN author_works USING (comic_id) 
         INNER JOIN comic_tags USING (comic_id) 
@@ -352,12 +354,21 @@ def comic_details(comic_id):
         INNER JOIN comic_status USING (comic_status_id) 
         INNER JOIN comic_type USING (comic_type_id) 
         LEFT JOIN reading_list ON comics.comic_id = reading_list.comic_id AND reading_list.user_id = ?
-        WHERE comics.comic_id = ? """,
+        WHERE comics.comic_id = ? 
+        GROUP BY comics.comic_id
+        """,
         comic_id,
         user_id,
     )
-
     reading_status = db_execute("SELECT * FROM reading_status")
+
+    if not specific_comic_details:
+        flash("Invalid selected comic")
+        return redirect(f"/comic_details/{comic_id}")
+
+    if not reading_status:
+        flash("Invalid status")
+        return redirect(f"/comic_details/{comic_id}")
 
     return render_template(
         "comic_details.html", details=specific_comic_details, status=reading_status
@@ -384,6 +395,11 @@ def change_reading_status(comic_id):
     if request.method == "POST":
         user_id = session["user_id"]
         status_id = request.form.get("reading_status_id")
+
+        if not status_id:
+            flash("Invalid value for status")
+            return redirect(f"/comic_details/{comic_id}")
+
         try:
             db_execute(
                 "UPDATE reading_list SET reading_status_id = ? WHERE comic_id = ? AND user_id = ?",
@@ -391,7 +407,7 @@ def change_reading_status(comic_id):
                 comic_id,
                 user_id,
             )
-        except:
+        except Exception as e:
             print(f"Unexpected error: {e}")
             flash("An internal error occurred.")
     return redirect(f"/comic_details/{comic_id}")
@@ -402,9 +418,37 @@ def remove_reading_list(comic_id):
     """Remove comic from reading list"""
     if request.method == "POST":
         user_id = session["user_id"]
-        db_execute(
-            "DELETE FROM reading_list WHERE comic_id = ? AND user_id = ?",
-            comic_id,
-            user_id,
-        )
+        try:
+            db_execute(
+                "DELETE FROM reading_list WHERE comic_id = ? AND user_id = ?",
+                comic_id,
+                user_id,
+            )
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            flash("An internal error occurred.")
+    return redirect(f"/comic_details/{comic_id}")
+
+
+@app.route("/add-rating/<int:comic_id>", methods=["GET", "POST"])
+def add_rating(comic_id):
+    """Adds rating to comic"""
+    if request.method == "POST":
+        rating = request.form.get("rating")
+        user_id = session["user_id"]
+
+        if not rating:
+            flash("Missing rating value")
+            return redirect(f"/comic_details/{comic_id}")
+
+        try:
+            db_execute(
+                "UPDATE reading_list SET rating = ? WHERE user_id = ? AND comic_id = ?",
+                rating,
+                user_id,
+                comic_id,
+            )
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            flash("An internal error occurred.")
     return redirect(f"/comic_details/{comic_id}")
