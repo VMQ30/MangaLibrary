@@ -7,11 +7,17 @@ styles %}
 {% endblock%} {% block main %}
 <div class="reading-list">
   <h3>Reading List</h3>
-  <div class="filters-wrapper">
-    <button class="filter">Reading ({{total[0]['total']}})</button>
-    <button class="filter">Completed ({{total[1]['total']}})</button>
-    <button class="filter">Plan to Read ({{total[2]['total']}})</button>
-  </div>
+  <form class="filters-wrapper" action="/reading-list" method="POST">
+    <button name="filter" class="filter" value="reading">
+      Reading ({{total[0]['total']}})
+    </button>
+    <button class="filter" value="completed" name="filter">
+      Completed ({{total[1]['total']}})
+    </button>
+    <button class="filter" value="plan_to_read" name="filter">
+      Plan to Read ({{total[2]['total']}})
+    </button>
+  </form>
   <div class="comic-list">
     {%for list in reading_list%}
     <div

@@ -520,13 +520,12 @@ def set_num_chapters(comic_id):
     return redirect(f"/comic_details/{comic_id}")
 
 
-@app.route("/reading-list")
+@app.route("/reading-list", methods=["GET", "POST"])
 @login_required
 def reading_list():
     """Gets user's reading list"""
-    user_id = session["user_id"]
-    comic_list = db_execute(
-        """
+
+    q = """
             SELECT 
                 c.comic_id,
                 c.title,
@@ -541,7 +540,23 @@ def reading_list():
             INNER JOIN comic_type AS ct ON c.comic_type_id = ct.comic_type_id
             INNER JOIN reading_status AS rs USING (reading_status_id)
             WHERE user_id = ?
-        """,
+        """
+
+    if request.method == "POST":
+        order = request.form.get("filter")
+
+        if order == "reading":
+            q += " AND rl.reading_status_id = 1"
+
+        if order == "completed":
+            q += " AND rl.reading_status_id = 2"
+
+        if order == "plan_to_read":
+            q += " AND rl.reading_status_id = 3"
+
+    user_id = session["user_id"]
+    comic_list = db_execute(
+        q,
         user_id,
     )
 
@@ -552,8 +567,9 @@ def reading_list():
             COUNT(rl.reading_status_id) AS total
         FROM reading_status AS rs
         LEFT JOIN reading_list AS rl
-        USING(reading_status_id)
-        GROUP BY rl.reading_status_id
-        """
+        ON rl.reading_status_id = rs.reading_status_id AND rl.user_id = ?
+        GROUP BY rs.reading_status_id
+        """,
+        user_id,
     )
     return render_template("reading_list.html", reading_list=comic_list, total=total)
