@@ -1,0 +1,34 @@
+{% extends 'layout.html' %} {% block title %}MangaQuery{% endblock%} {% block
+styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='/reading-list.css') }}"
+/>
+{% endblock%} {% block main %}
+<div class="reading-list">
+  <h3>Reading List</h3>
+  <div class="filters-wrapper">
+    <button class="filter">Reading ({{total[0]['total']}})</button>
+    <button class="filter">Completed ({{total[1]['total']}})</button>
+    <button class="filter">Plan to Read ({{total[2]['total']}})</button>
+  </div>
+  <div class="comic-list">
+    {%for list in reading_list%}
+    <div class="comic">
+      <div class="cover-pic">
+        <img src="{{list.cover_image}}" alt="{{list.title}} Cover Art" />
+      </div>
+      <div class="info">
+        <h4>{{list.title}}</h4>
+        <div>
+          <p>{{list.avg_rating}} - {{list.type_name}}</p>
+        </div>
+        <div>
+          <p>Ch. {{list.current_chapter}} / {{list.num_of_chapters}}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{%endblock%}

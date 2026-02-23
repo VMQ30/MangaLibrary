@@ -518,3 +518,41 @@ def set_num_chapters(comic_id):
         print(f"Unexpected error: {e}")
         flash("An internal error occurred.")
     return redirect(f"/comic_details/{comic_id}")
+
+
+@app.route("/reading-list")
+@login_required
+def reading_list():
+    """Gets user's reading list"""
+    user_id = session["user_id"]
+    comic_list = db_execute(
+        """
+            SELECT 
+                c.title,
+                c.num_of_chapters,
+                c.cover_image,
+                rl.current_chapter,
+                ct.type_name,
+                rs.reading_status_name,
+                (SELECT ROUND(AVG(rating), 1) FROM reading_list WHERE comic_id = c.comic_id) AS avg_rating
+            FROM reading_list AS rl
+            INNER JOIN comics AS c USING (comic_id)
+            INNER JOIN comic_type AS ct ON c.comic_type_id = ct.comic_type_id
+            INNER JOIN reading_status AS rs USING (reading_status_id)
+            WHERE user_id = ?
+        """,
+        user_id,
+    )
+
+    total = db_execute(
+        """
+        SELECT 
+            rs.reading_status_name,
+            COUNT(rl.reading_status_id) AS total
+        FROM reading_status AS rs
+        LEFT JOIN reading_list AS rl
+        USING(reading_status_id)
+        GROUP BY rl.reading_status_id
+        """
+    )
+    return render_template("reading_list.html", reading_list=comic_list, total=total)
