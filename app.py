@@ -528,6 +528,7 @@ def reading_list():
     comic_list = db_execute(
         """
             SELECT 
+                c.comic_id,
                 c.title,
                 c.num_of_chapters,
                 c.cover_image,

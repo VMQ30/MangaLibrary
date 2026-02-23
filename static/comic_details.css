@@ -53,6 +53,8 @@
   display: flex;
   flex-direction: row;
   gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
   div {
     background-color: #2b004b;
     color: white;
@@ -163,4 +165,17 @@
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .comic-photo {
+    width: 100%;
+  }
+  .comic-details-container {
+    flex-direction: column;
+    gap: 40px;
+  }
+  .reading-list-info select {
+    width: 50%;
+  }
 }

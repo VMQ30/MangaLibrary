@@ -2,7 +2,7 @@
 styles %}
 <link
   rel="stylesheet"
-  href="{{ url_for('static', filename='/reading-list.css') }}"
+  href="{{ url_for('static', filename='/reading_list.css') }}"
 />
 {% endblock%} {% block main %}
 <div class="reading-list">
@@ -14,14 +14,19 @@ styles %}
   </div>
   <div class="comic-list">
     {%for list in reading_list%}
-    <div class="comic">
+    <div
+      class="comic"
+      onclick='window.location.href = "/comic_details/{{list.comic_id }}"'
+    >
       <div class="cover-pic">
         <img src="{{list.cover_image}}" alt="{{list.title}} Cover Art" />
       </div>
       <div class="info">
         <h4>{{list.title}}</h4>
         <div>
-          <p>{{list.avg_rating}} - {{list.type_name}}</p>
+          <p>★ {{list.avg_rating}}</p>
+          <p>·</p>
+          <p>{{list.type_name}}</p>
         </div>
         <div>
           <p>Ch. {{list.current_chapter}} / {{list.num_of_chapters}}</p>
