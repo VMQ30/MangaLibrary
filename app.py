@@ -102,12 +102,14 @@ init_db()
 @app.route("/")
 def home():
     """Show the landing page"""
+    session.clear()
     return render_template("index.html")
 
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
     """Register users"""
+    session.clear()
     if request.method == "POST":
         email = request.form.get("email")
         username = request.form.get("username")
@@ -136,6 +138,7 @@ def register():
 @app.route("/login", methods=["POST", "GET"])
 def login():
     """Logs in user"""
+    session.clear()
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
@@ -187,6 +190,14 @@ def add_comic():
             return redirect("/add-comic")
 
         try:
+            existing_comic = db_execute(
+                "SELECT comic_id FROM comics WHERE title = ?", title
+            )
+
+            if existing_comic:
+                flash("Comic already exists", "error")
+                return redirect("/add-comic")
+
             status_id = db_execute(
                 "SELECT * FROM comic_status WHERE status_name = ?", status
             )
@@ -302,7 +313,7 @@ def browse():
             params.append(type_filter)
         if title_filter:
             q += " AND title LIKE ?"
-            params.append(title_filter)
+            params.append(f"%{title_filter}%")
         if tags_filter:
             placeholder = ", ".join(["?"] * len(tags_filter))
             q += f" AND comic_id IN (SELECT comic_id FROM comic_tags JOIN tags USING (tags_id) WHERE tags_name IN ({placeholder}))"
@@ -338,27 +349,39 @@ def browse():
 
 
 @app.route("/comic_details/<int:comic_id>")
+@login_required
 def comic_details(comic_id):
     """Get comic details"""
     user_id = session["user_id"]
     specific_comic_details = db_execute(
         """
         SELECT 
-            *,
-            (SELECT ROUND(AVG(rating) , 2) FROM reading_list WHERE comics.comic_id = reading_list.comic_id) AS avg_rating
-        FROM comics
-        INNER JOIN author_works USING (comic_id) 
-        INNER JOIN comic_tags USING (comic_id) 
-        INNER JOIN authors USING (author_id) 
-        INNER JOIN tags USING (tags_id) 
-        INNER JOIN comic_status USING (comic_status_id) 
-        INNER JOIN comic_type USING (comic_type_id) 
-        LEFT JOIN reading_list ON comics.comic_id = reading_list.comic_id AND reading_list.user_id = ?
-        WHERE comics.comic_id = ? 
-        GROUP BY comics.comic_id
+            c.comic_id, 
+            c.title, 
+            c.comic_description, 
+            c.cover_image,
+            c.num_of_chapters,
+            a.name AS author_name,
+            t.tags_name,
+            cs.status_name,
+            ct.type_name,
+            rl.reading_list_id,
+            COALESCE(rl.rating , 0) AS user_rating,
+            rl.reading_status_id,
+            rl.current_chapter,
+            (SELECT ROUND(AVG(rating), 1) FROM reading_list WHERE comic_id = c.comic_id) AS avg_rating
+        FROM comics AS c
+        INNER JOIN author_works AS aw ON c.comic_id = aw.comic_id
+        INNER JOIN authors AS a ON aw.author_id = a.author_id
+        INNER JOIN comic_tags AS ctgs ON c.comic_id = ctgs.comic_id
+        INNER JOIN tags AS t ON ctgs.tags_id = t.tags_id
+        INNER JOIN comic_status AS cs ON c.comic_status_id = cs.comic_status_id
+        INNER JOIN comic_type AS ct ON c.comic_type_id = ct.comic_type_id
+        LEFT JOIN reading_list AS rl ON c.comic_id = rl.comic_id AND rl.user_id = ?
+        WHERE c.comic_id = ?
         """,
-        comic_id,
         user_id,
+        comic_id,
     )
     reading_status = db_execute("SELECT * FROM reading_status")
 
@@ -376,6 +399,7 @@ def comic_details(comic_id):
 
 
 @app.route("/add_reading_list/<int:comic_id>", methods=["POST", "GET"])
+@login_required
 def add_reading_list(comic_id):
     """Add comic to reading list"""
     if request.method == "POST":
@@ -390,6 +414,7 @@ def add_reading_list(comic_id):
 
 
 @app.route("/change_reading_status/<int:comic_id>", methods=["POST", "GET"])
+@login_required
 def change_reading_status(comic_id):
     """Change reading status"""
     if request.method == "POST":
@@ -414,6 +439,7 @@ def change_reading_status(comic_id):
 
 
 @app.route("/remove_reading_list/<int:comic_id>", methods=["POST", "GET"])
+@login_required
 def remove_reading_list(comic_id):
     """Remove comic from reading list"""
     if request.method == "POST":
@@ -431,6 +457,7 @@ def remove_reading_list(comic_id):
 
 
 @app.route("/add-rating/<int:comic_id>", methods=["GET", "POST"])
+@login_required
 def add_rating(comic_id):
     """Adds rating to comic"""
     if request.method == "POST":
@@ -451,4 +478,43 @@ def add_rating(comic_id):
         except Exception as e:
             print(f"Unexpected error: {e}")
             flash("An internal error occurred.")
+    return redirect(f"/comic_details/{comic_id}")
+
+
+@app.route("/set-num-chapters/<int:comic_id>", methods=["POST"])
+@login_required
+def set_num_chapters(comic_id):
+    """Sets the chapter read"""
+    user_id = session["user_id"]
+    if not user_id:
+        flash("Missing user, please login")
+        return redirect("/login")
+    if not comic_id:
+        flash("Comic not found")
+        return redirect(f"/comic_details/{comic_id}")
+
+    max_chapter = db_execute(
+        "SELECT CAST(num_of_chapters AS INTEGER) AS num_of_chapters FROM comics WHERE comic_id = ?",
+        comic_id,
+    )
+    current_chapter = request.form.get("current-chapter")
+
+    if max_chapter[0]["num_of_chapters"] < int(current_chapter):
+        flash("Invalid Input")
+        return redirect(f"/comic_details/{comic_id}")
+
+    if not current_chapter:
+        flash("Input missing, try again")
+        return redirect(f"/comic_details/{comic_id}")
+
+    try:
+        db_execute(
+            "UPDATE reading_list SET current_chapter = ? WHERE comic_id = ? AND user_id = ?",
+            current_chapter,
+            comic_id,
+            user_id,
+        )
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        flash("An internal error occurred.")
     return redirect(f"/comic_details/{comic_id}")

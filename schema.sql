@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS comics(
     comic_id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     comic_description TEXT NOT NULL,
-    num_of_chapters INTEGER NOT NULL DEFAULT 1
+    num_of_chapters INTEGER NOT NULL DEFAULT 1,
     cover_image TEXT,
     comic_type_id INTEGER,
     comic_status_id INTEGER,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS author_works(
     FOREIGN KEY(author_id) REFERENCES authors(author_id),
     FOREIGN KEY(comic_id) REFERENCES comics(comic_id),
     UNIQUE(author_id, comic_id)
-);a
+);
 
 CREATE TABLE IF NOT EXISTS tags(
     tags_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS reading_list(
     comic_id INTEGER,
     user_id INTEGER,
     rating INTEGER,
+    current_chapter INTEGER,
     reading_status_id INTEGER NOT NULL DEFAULT 1,
     FOREIGN KEY(comic_id) REFERENCES comics(comic_id),
     FOREIGN KEY(user_id) REFERENCES users(user_id),

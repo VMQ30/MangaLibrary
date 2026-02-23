@@ -12,6 +12,15 @@
   width: 80%;
 }
 
+.no-results {
+  width: 100%;
+  h4 {
+    width: 100%;
+    font-size: 1.5rem;
+    font-family: "Verdana";
+  }
+}
+
 .browse-title h3 {
   margin: 0;
   font-size: 2rem;

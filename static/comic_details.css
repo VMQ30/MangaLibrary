@@ -13,7 +13,13 @@
     font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 2px;
+    transition: 0.3s ease;
   }
+}
+
+.header a:hover {
+  color: white;
+  text-decoration: underline;
 }
 
 .comic-details-container {
@@ -33,6 +39,12 @@
 
 .comic-info {
   width: 100%;
+}
+
+.comic-info-main p {
+  font-size: 1rem;
+  font-family: "Poppins";
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .info-header-upper {
@@ -91,6 +103,9 @@
 }
 
 .reading-list-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
   margin-top: 20px;
   div {
     display: flex;
