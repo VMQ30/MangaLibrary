@@ -29,12 +29,21 @@
 
 .comic-photo {
   width: 30%;
+  height: 100%;
   aspect-ratio: 6/9;
   background-color: #1f00375f;
   border: 2px solid #2b004b;
   border-radius: 5px;
   position: relative;
   font-family: "Poppins";
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+    display: block;
+  }
 }
 
 .comic-info {

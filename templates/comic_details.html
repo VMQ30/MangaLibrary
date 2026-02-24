@@ -12,7 +12,10 @@ styles %}
 
   <div class="comic-details-container">
     <div class="comic-photo">
-      <img src="{{details.cover_image}}" alt="{{details.title}} photo cover" />
+      <img
+        src="{{details[0].cover_image}}"
+        alt="{{details.title}} photo cover"
+      />
     </div>
 
     <div class="comic-info">

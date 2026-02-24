@@ -142,7 +142,6 @@
   border: 2px solid #2b004b;
   border-radius: 5px;
   position: relative;
-  padding: 15px;
   cursor: pointer;
   transition: 0.3s ease;
   font-family: "Poppins";
@@ -168,10 +167,16 @@
   color: white;
   img {
     object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 
 .card-info {
+  padding: 15px;
+  background-image: linear-gradient(180deg, transparent 30%, black 100%);
+  position: relative;
+  z-index: 90;
   display: relative;
   z-index: 10;
   height: 100%;

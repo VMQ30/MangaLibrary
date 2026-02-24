@@ -27,61 +27,25 @@ styles %}
     </div>
 
     <div>
-      <a href="#">View All <span class="arrow">➜</span></a>
+      <a href="/browse">View All <span class="arrow">➜</span></a>
     </div>
   </div>
   <div class="suggestion-main">
     <div class="card-container">
+      {% for comic in comics %}
       <div class="card-wrapper">
+        <div class="background">
+          <img src="{{comic.cover_image}}" alt="{{comic.title}} cover" />
+        </div>
         <div class="card">
-          <h4>title</h4>
+          <h4>{{comic.title}}</h4>
           <div>
-            <p>rating</p>
-            <p>type</p>
+            <p>{{comic.avg_rating}}</p>
+            <p>Ch. {{comic.num_of_chapters}}</p>
           </div>
         </div>
       </div>
-
-      <div class="card-wrapper">
-        <div class="card">
-          <h4>title</h4>
-          <div>
-            <p>rating</p>
-            <p>type</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-wrapper">
-        <div class="card">
-          <h4>title</h4>
-          <div>
-            <p>rating</p>
-            <p>type</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-wrapper">
-        <div class="card">
-          <h4>title</h4>
-          <div>
-            <p>rating</p>
-            <p>type</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-wrapper">
-        <div class="card">
-          <h4>title</h4>
-          <div>
-            <p>rating</p>
-            <p>.</p>
-            <p>type</p>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </div>

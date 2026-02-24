@@ -103,7 +103,25 @@ init_db()
 def home():
     """Show the landing page"""
     session.clear()
-    return render_template("index.html")
+
+    try:
+        comics = db_execute(
+            """
+        SELECT 
+            c.title,
+            c.num_of_chapters,
+            C.cover_image,
+            (SELECT ROUND(AVG(COALESCE(rating , 0)), 1) FROM reading_list WHERE comic_id = c.comic_id) AS avg_rating
+            FROM comics AS c
+            ORDER BY avg_rating DESC
+            LIMIT 5
+    """
+        )
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        flash("An internal error occurred.")
+
+    return render_template("index.html", comics=comics)
 
 
 @app.route("/register", methods=["POST", "GET"])
@@ -530,7 +548,7 @@ def reading_list():
                 c.title,
                 c.num_of_chapters,
                 c.cover_image,
-                rl.current_chapter,
+                COALESCE(rl.current_chapter , 0) AS current_chapter,
                 ct.type_name,
                 rs.reading_status_name,
                 (SELECT ROUND(AVG(rating), 1) FROM reading_list WHERE comic_id = c.comic_id) AS avg_rating
