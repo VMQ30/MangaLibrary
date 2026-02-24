@@ -11,6 +11,14 @@
     margin: 0;
     font-family: "Verdana";
   }
+  h6 {
+    font-size: 1.5rem;
+    font-family: "Poppins";
+    text-transform: capitalize;
+    letter-spacing: 3px;
+    margin: 0;
+    font-weight: 100;
+  }
 }
 
 .filters-wrapper {

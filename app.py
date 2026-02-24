@@ -148,7 +148,6 @@ def login():
             return redirect("/login")
 
         rows = db_execute("SELECT * FROM users WHERE email = ?", email)
-        print("DEBUG ROWS:", rows, flush=True)
 
         if len(rows) != 1 or not check_password_hash(rows[0]["password"], password):
             flash("Invalid email or password", "error")

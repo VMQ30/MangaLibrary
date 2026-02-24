@@ -19,7 +19,7 @@ styles %}
     </button>
   </form>
   <div class="comic-list">
-    {%for list in reading_list%}
+    {% if reading_list %} {%for list in reading_list%}
     <div
       class="comic"
       onclick='window.location.href = "/comic_details/{{list.comic_id }}"'
@@ -39,7 +39,9 @@ styles %}
         </div>
       </div>
     </div>
-    {% endfor %}
+    {% endfor %} {% else %}
+    <h6>No Comics Found</h6>
+    {% endif %}
   </div>
 </div>
 {%endblock%}
