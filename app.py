@@ -313,7 +313,7 @@ def add_comic():
 @login_required
 def browse():
     """Brose comics"""
-    q = "SELECT * FROM comics INNER JOIN comic_status USING (comic_status_id) INNER JOIN comic_type USING (comic_type_id) WHERE 1 + 1 "
+    q = "SELECT *, (SELECT ROUND(AVG(rating), 1) FROM reading_list WHERE comic_id = comics.comic_id) AS avg_rating FROM comics INNER JOIN comic_status USING (comic_status_id) INNER JOIN comic_type USING (comic_type_id) WHERE 1 + 1 "
     params = []
     if request.method == "POST":
         status_filter = request.form.get("comic_status")
@@ -336,7 +336,7 @@ def browse():
             q += f" AND comic_id IN (SELECT comic_id FROM comic_tags JOIN tags USING (tags_id) WHERE tags_name IN ({placeholder}))"
             params.extend(tags_filter)
         if comic_order == "highest-rating":
-            q += " ORDER BY ratings DESC"
+            q += " ORDER BY avg_rating DESC"
         elif comic_order == "asc-title":
             q += " ORDER BY title ASC"
         elif comic_order == "most-chapters":

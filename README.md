@@ -1,6 +1,6 @@
 # MangaQuery
 
-### Video Demo:
+### Video Demo: https://www.canva.com/design/DAHCPqCQm3w/O2sEOhphpyq4e8z0s7E1KA/edit?utm_content=DAHCPqCQm3w&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
 ### Description:
 
